@@ -1,6 +1,7 @@
 package Cgames;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.FocusAdapter;
@@ -12,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,10 +40,8 @@ public class AcGame {
 		try {
 			game.main_window = game.setup();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -55,6 +55,16 @@ public class AcGame {
 	public JFrame setup() throws MalformedURLException, IOException {
 //TODO wrap guessers in boxlayout with score and maybe other components (hints etc.) 
 //make texts on Textfields disappear when u put into in
+		JPanel boxOne = new JPanel();
+//		JPanel contentPane = new JPanel();
+//		contentPane.setLayout(new BoxLayout(new Container(), BoxLayout.Y_AXIS));
+//		boxOne.setContentPane(contentPane);
+		
+		boxOne.setLayout(new BoxLayout(boxOne, BoxLayout.Y_AXIS));
+		JPanel boxTwo = new JPanel();
+//		JPanel contentPanetwo = new JPanel(); ...boxTwo.getContentPane()
+		boxTwo.setLayout(new BoxLayout(boxTwo, BoxLayout.Y_AXIS));
+//		boxTwo.setContentPane(contentPane);
 		JFrame main_window = new JFrame();
 		main_window.setTitle("Guess Game");
 		main_window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,11 +78,17 @@ public class AcGame {
 		        source.removeFocusListener(this);
 		    }
 		});
-		Playerone.setPreferredSize(new Dimension(200, 24));
+//		Playerone.setPreferredSize(new Dimension(200, 24)); adjust later
 		Playerone.setText("<Player One take a Guess!>");
-		JPanel wrapper = new JPanel( new FlowLayout(0, 0, FlowLayout.LEADING) );
-		wrapper.add( Playerone );
-		main_window.add(wrapper, BorderLayout.WEST);
+//		JPanel wrapper = new JPanel( new FlowLayout(0, 0, FlowLayout.LEADING) ); replaced by BoxlayOutWrapper
+		JLabel nameOne = new JLabel();
+		JLabel scoreO = new JLabel();
+		nameOne.setText(pOne);
+		scoreO.setText("Score: "+Integer.toString(scoreOne));
+		boxOne.add(nameOne);
+		boxOne.add( Playerone );
+		boxOne.add(scoreO);
+		main_window.add(boxOne, BorderLayout.WEST);
 		JTextField Playertwo = new JTextField();
 		Playertwo.addFocusListener(new FocusAdapter() {
 		    public void focusGained(FocusEvent e) {
@@ -81,11 +97,19 @@ public class AcGame {
 		        source.removeFocusListener(this);
 		    }
 		});
-		Playertwo.setPreferredSize(new Dimension(200, 24));
+//		Playertwo.setPreferredSize(new Dimension(200, 24)); adjust later
 		Playertwo.setText("<Player Two take a Guess!>");
-		JPanel wrappertwo = new JPanel( new FlowLayout(0, 0, FlowLayout.LEADING) );
-		wrappertwo.add(Playertwo);
-		main_window.add(wrappertwo, BorderLayout.EAST);
+//		JPanel wrappertwo = new JPanel( new FlowLayout(0, 0, FlowLayout.LEADING) ); replaced by BoxLayoutWrapper
+		JLabel nameTwo = new JLabel();
+		JLabel scoreT = new JLabel();
+		scoreT.setText("Score: "+Integer.toString(scoreTwo));
+		nameTwo.setText(pTwo);
+		boxTwo.add(nameTwo);
+		boxTwo.add(Playertwo);
+		boxTwo.add(scoreT);
+		main_window.add(boxTwo, BorderLayout.EAST);
+		main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//		main_window.setUndecorated(true);
 		main_window.setVisible(true);
 	    return main_window;
 	}
