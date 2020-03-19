@@ -1,6 +1,7 @@
 package Cgames;
 
 import java.awt.BorderLayout;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.FocusAdapter;
@@ -46,6 +47,8 @@ public static void startPage() {
 		 playernames();
 		 main_window.setVisible(false);
 		}); 
+	main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//	main_window.setUndecorated(true);
 	main_window.setVisible(true);
 }
 public static void playernames() {
@@ -96,6 +99,8 @@ public static void playernames() {
 	random.addActionListener((event) -> {
 		AcGame.starter(randomAlphaNumeric(7), randomAlphaNumeric(7));
 		}); 
+	players.pack();
+	players.setLocationRelativeTo(null);
 	players.setVisible(true);
 }
 public static String randomAlphaNumeric(int count) {
