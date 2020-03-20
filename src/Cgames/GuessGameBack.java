@@ -91,13 +91,14 @@ public static void playernames() {
 	players.add(confirmbutton, BorderLayout.NORTH);
 	confirmbutton.addActionListener((event) -> {
 		 AcGame.starter(Playerone.getText(), Playertwo.getText());
-		 
+		 players.setVisible(false);
 		}); 
 	JButton random = new JButton();
 	random.setText("Generate random names");
 	players.add(random);
 	random.addActionListener((event) -> {
 		AcGame.starter(randomAlphaNumeric(7), randomAlphaNumeric(7));
+		players.setVisible(false);
 		}); 
 	players.pack();
 	players.setLocationRelativeTo(null);
