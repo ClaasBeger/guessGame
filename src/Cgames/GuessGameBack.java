@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -23,7 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-//put center buttoms below each other in center of BoxLayout without gap, then implement the new classes
+//implement the new classes add exit code 0 after exit buttons
 public class GuessGameBack {
 	private String pOne;
 	private String pTwo;
@@ -45,11 +48,12 @@ public static void startPage() {
 	JButton startbutton = new JButton();
 	startbutton.setText("Start a new Game");
 	JPanel Center = new JPanel();
-	Center.setLayout(new BorderLayout());
-//	Center.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+	Center.setLayout(new GridLayout(2,1));
+//	GridBagConstraints gbc = new GridBagConstraints();
+	Center.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 	main_window.add(Center, BorderLayout.CENTER);
 	startbutton.setPreferredSize(new Dimension(400, 200));
-	Center.add(startbutton, BorderLayout.SOUTH);
+	Center.add(startbutton);//, BorderLayout.SOUTH);
 	startbutton.addActionListener((event) -> {
 		 playernames();
 		 main_window.setVisible(false);
@@ -60,8 +64,9 @@ public static void startPage() {
 		SingPlayer sin = new SingPlayer();
 		main_window.setVisible(false);
 	});
-	singPlayer.setPreferredSize(new Dimension(400,200));
-	Center.add(singPlayer, BorderLayout.NORTH);
+    Dimension d = singPlayer.getMaximumSize();
+	singPlayer.setMaximumSize(d);//.setPreferredSize(new Dimension(400,200));
+	Center.add(singPlayer);//, BorderLayout.NORTH);
 	
 	JButton Statistic = new JButton();
 	Statistic.setText("Statistics");
