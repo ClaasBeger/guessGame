@@ -1,7 +1,7 @@
 package Cgames;
 
 import java.awt.BorderLayout;
-
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.FocusAdapter;
@@ -14,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,7 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+//put center buttoms below each other in center of BoxLayout without gap, then implement the new classes
 public class GuessGameBack {
 	private String pOne;
 	private String pTwo;
@@ -42,13 +44,33 @@ public static void startPage() {
 	main_window.setLayout(new BorderLayout());
 	JButton startbutton = new JButton();
 	startbutton.setText("Start a new Game");
-	main_window.add(startbutton);
+	JPanel Center = new JPanel();
+	Center.setLayout(new BorderLayout());
+//	Center.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+	main_window.add(Center, BorderLayout.CENTER);
+	startbutton.setPreferredSize(new Dimension(400, 200));
+	Center.add(startbutton, BorderLayout.SOUTH);
 	startbutton.addActionListener((event) -> {
 		 playernames();
 		 main_window.setVisible(false);
 		}); 
+	JButton singPlayer = new JButton();
+	singPlayer.setText("Single Player Guesses");
+	singPlayer.addActionListener((event) -> {
+		SingPlayer sin = new SingPlayer();
+		main_window.setVisible(false);
+	});
+	singPlayer.setPreferredSize(new Dimension(400,200));
+	Center.add(singPlayer, BorderLayout.NORTH);
+	
+	JButton Statistic = new JButton();
+	Statistic.setText("Statistics");
+	main_window.add(Statistic, BorderLayout.EAST);
+	Statistic.addActionListener((event) -> {
+		Stats stats = new Stats();
+		main_window.setVisible(false);
+		}); 
 	main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-//	main_window.setUndecorated(true);
 	main_window.setVisible(true);
 }
 public static void playernames() {
