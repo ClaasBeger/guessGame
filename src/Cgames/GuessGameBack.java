@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -26,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 //implement the new classes add exit code 0 after exit buttons
 public class GuessGameBack {
 	private String pOne;
@@ -41,35 +43,76 @@ public class GuessGameBack {
 	}
 public static void startPage() {
 	JFrame main_window = new JFrame();
+	JButton startbutton = new JButton();
+	JPanel Center = new JPanel();
+	JButton singPlayer = new JButton();
+	JPanel settPanel = new JPanel();
+	JPanel placeHolder = new JPanel();
+	JLabel Title = new JLabel("The Guess Game", SwingConstants.CENTER);
+	JButton Badges = new JButton();
+	JButton Statistic = new JButton();
+	JButton sett = new JButton();
+	
 	main_window.setTitle("Starting the Guess Game");
+	main_window.getContentPane().setBackground(Color.BLUE);
 	main_window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	main_window.setSize(2000, 1000);
 	main_window.setLayout(new BorderLayout());
-	JButton startbutton = new JButton();
+	
 	startbutton.setText("Start a new Game");
-	JPanel Center = new JPanel();
+	startbutton.setBackground(Color.GREEN);
+	
 	Center.setLayout(new GridLayout(2,1));
-//	GridBagConstraints gbc = new GridBagConstraints();
 	Center.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 	main_window.add(Center, BorderLayout.CENTER);
 	startbutton.setPreferredSize(new Dimension(400, 200));
-	Center.add(startbutton);//, BorderLayout.SOUTH);
+	Center.add(startbutton);
 	startbutton.addActionListener((event) -> {
-		 playernames();
+		 playernames(main_window);
 		 main_window.setVisible(false);
 		}); 
-	JButton singPlayer = new JButton();
+	
 	singPlayer.setText("Single Player Guesses");
+	singPlayer.setBackground(Color.BLUE);
 	singPlayer.addActionListener((event) -> {
 		SingPlayer sin = new SingPlayer();
 		main_window.setVisible(false);
 	});
-    Dimension d = singPlayer.getMaximumSize();
+	
+	placeHolder.setBackground(Color.CYAN);
+	Title.setFont(new Font("Serif", Font.PLAIN, 44));
+	Title.setBackground(Color.CYAN);
+	Title.setOpaque(true);
+	Title.setPreferredSize(new Dimension(800, 100));
+	placeHolder.add(Title);
+	placeHolder.setPreferredSize(new Dimension(800, 100));
+	main_window.add(placeHolder, BorderLayout.NORTH);
+	
+	sett.setBackground(Color.GRAY);
+	sett.addActionListener((event)-> {
+		//TODO create settings method and frame (including class attributes)
+	});
+	sett.setPreferredSize(new Dimension(800,100));
+	sett.setText("Settings");
+	settPanel.add(sett);
+	settPanel.setBackground(Color.CYAN);
+	settPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+	settPanel.setPreferredSize(new Dimension(800,100));
+	main_window.add(settPanel, BorderLayout.SOUTH);
+    
+	Dimension d = singPlayer.getMaximumSize();
 	singPlayer.setMaximumSize(d);//.setPreferredSize(new Dimension(400,200));
 	Center.add(singPlayer);//, BorderLayout.NORTH);
 	
-	JButton Statistic = new JButton();
+	Badges.setBackground(Color.YELLOW);
+	Badges.setText("badges");
+	Badges.addActionListener((event)-> {
+		//create an Instance of Badges Class with overlay data
+	});
+	main_window.add(Badges, BorderLayout.WEST);
+	
 	Statistic.setText("Statistics");
+	Statistic.setBackground(Color.ORANGE);
 	main_window.add(Statistic, BorderLayout.EAST);
 	Statistic.addActionListener((event) -> {
 		Stats stats = new Stats();
@@ -78,7 +121,7 @@ public static void startPage() {
 	main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 	main_window.setVisible(true);
 }
-public static void playernames() {
+public static void playernames(JFrame main_window) {
 	JFrame players = new JFrame();
 	players.setTitle("Guess Game Names");
 	players.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,14 +160,14 @@ public static void playernames() {
 	confirmbutton.setText("Bestätige Eingabe");
 	players.add(confirmbutton, BorderLayout.NORTH);
 	confirmbutton.addActionListener((event) -> {
-		 AcGame.starter(Playerone.getText(), Playertwo.getText());
+		 AcGame.starter(Playerone.getText(), Playertwo.getText(), main_window);
 		 players.setVisible(false);
 		}); 
 	JButton random = new JButton();
 	random.setText("Generate random names");
 	players.add(random);
 	random.addActionListener((event) -> {
-		AcGame.starter(randomAlphaNumeric(7), randomAlphaNumeric(7));
+		AcGame.starter(randomAlphaNumeric(7), randomAlphaNumeric(7), main_window);
 		players.setVisible(false);
 		}); 
 	players.pack();
@@ -139,7 +182,9 @@ builder.append(ALPHA_NUMERIC_STRING.charAt(character));
 }
 return builder.toString();
 }
-
+public static void settings() {
+	//implement settings frame and attributes
+}
 public static void main(String[] args) {
 	startPage();
 }

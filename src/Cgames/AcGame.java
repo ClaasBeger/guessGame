@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -21,7 +22,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class AcGame {
 	private String pOne;
@@ -31,17 +34,19 @@ public class AcGame {
 	private int scoreOne;
 	private int scoreTwo;
 	private JFrame main_window;
-	public AcGame(String POne,String PTwo) {
+	private JFrame frame;
+	public AcGame(String POne,String PTwo, JFrame main) {
 		this.scoreOne = 0;
 		this.scoreTwo = 0;
 		this.pOne = POne;
 		this.pTwo = PTwo;
+		this.main_window = main;
 	}
 	
-	public static void starter(String one, String two) {
-		AcGame game = new AcGame(one, two);
+	public static void starter(String one, String two, JFrame main) {
+		AcGame game = new AcGame(one, two, main);
 		try {
-			game.main_window = game.setup();
+			game.frame = game.setup();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -107,16 +112,41 @@ public class AcGame {
 		JButton EndButton = new JButton();
 		EndButton.addActionListener((event)->{
 			main_window.setVisible(false);
+			System.exit(0);
 		});
 		EndButton.setText("End Game");
 		JPanel panel = new JPanel();
-//		panel.setLayout(new BorderLayout(0, 0));
 		panel.add(picturebutton);
 		panel.add(EndButton);
+		JButton confirmButton = new JButton();
+		confirmButton.setText("Confirm your Guesses");
+		panel.add(confirmButton);
+		confirmButton.addActionListener((event) ->{
+			if(Playerone.getText().equals("")||Playertwo.getText().equals("")) {
+				JFrame inv = new JFrame();
+				JLabel err = new JLabel("One of the players input is empty :(");
+				inv.add(err);
+				inv.pack();
+				inv.setLocationRelativeTo(null);
+				inv.setVisible(true);
+			}
+			try {
+				this.firstGuess = BigInteger.valueOf(Long.parseLong(Playerone.getText()));
+				this.secondGuess = BigInteger.valueOf(Long.parseLong(Playertwo.getText()));
+			}
+			catch(NumberFormatException e) {
+				JFrame inv = new JFrame();
+				JLabel err = new JLabel("One of the players input an invalid character :(");
+				inv.add(err);
+				inv.pack();
+				inv.setLocationRelativeTo(null);
+				inv.setVisible(true);
+			}
+		});
 		main_window.getContentPane().add(panel, BorderLayout.SOUTH);
 		picturebutton.addActionListener((event) -> {
 			 try {
-				 displayPicture();
+				 displayPicture(main_window);
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -126,19 +156,18 @@ public class AcGame {
 		main_window.setVisible(true);
 	    return main_window;
 	}
-	public static void displayPicture() throws MalformedURLException, IOException {
-		JFrame frame = new JFrame();
+	public static void displayPicture(JFrame frame) throws MalformedURLException, IOException {
+		JLabel Quest = new JLabel("How many Green M&Ms are there ?", SwingConstants.CENTER);
+		Quest.setFont(new Font("Serif", Font.PLAIN, 34));
+		frame.add(Quest, BorderLayout.NORTH);
 		BufferedImage img = ImageIO.read(new URL(
 				"https://i7.pngguru.com/preview/310/650/573/5bbc43fbae155.jpg"));
-		    ImageIcon icon = new ImageIcon(img);
-		    JLabel lbl = new JLabel();
-		    lbl.setHorizontalAlignment(JLabel.CENTER);
-		    lbl.setVerticalAlignment(JLabel.CENTER);
-		    lbl.setIcon(icon);
-		    frame.add(lbl, BorderLayout.CENTER);
-		    frame.pack();
-			frame.setLocationRelativeTo(null);
-		    frame.setVisible(true);
-		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	 ImageIcon icon = new ImageIcon(img);
+     JLabel label = new JLabel(icon);
+     JScrollPane scrollPane = new JScrollPane(label);
+     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+     frame.add(scrollPane, BorderLayout.CENTER);
+     frame.setVisible(true);
 		  }
 }
