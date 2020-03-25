@@ -49,7 +49,7 @@ public static void startPage() {
 	JPanel settPanel = new JPanel();
 	JPanel placeHolder = new JPanel();
 	JLabel Title = new JLabel("The Guess Game", SwingConstants.CENTER);
-	JButton Badges = new JButton();
+	JButton badges = new JButton();
 	JButton Statistic = new JButton();
 	JButton sett = new JButton();
 	
@@ -104,18 +104,19 @@ public static void startPage() {
 	singPlayer.setMaximumSize(d);//.setPreferredSize(new Dimension(400,200));
 	Center.add(singPlayer);//, BorderLayout.NORTH);
 	
-	Badges.setBackground(Color.YELLOW);
-	Badges.setText("badges");
-	Badges.addActionListener((event)-> {
-		//create an Instance of Badges Class with overlay data
+	badges.setBackground(Color.YELLOW);
+	badges.setText("Badges");
+	badges.addActionListener((event)-> {
+		Badges.starter();
+		main_window.setVisible(false);
 	});
-	main_window.add(Badges, BorderLayout.WEST);
+	main_window.add(badges, BorderLayout.WEST);
 	
 	Statistic.setText("Statistics");
 	Statistic.setBackground(Color.ORANGE);
 	main_window.add(Statistic, BorderLayout.EAST);
 	Statistic.addActionListener((event) -> {
-		Stats stats = new Stats();
+		Stats.plot(new JFrame());
 		main_window.setVisible(false);
 		}); 
 	main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 

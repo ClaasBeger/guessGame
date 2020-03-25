@@ -31,13 +31,14 @@ public class AcGame {
 	private String pTwo;
 	private BigInteger firstGuess;
 	private BigInteger secondGuess;
-	private int scoreOne;
-	private int scoreTwo;
+	private BigInteger scoreOne;
+	private BigInteger scoreTwo;
 	private JFrame main_window;
 	private JFrame frame;
+	private BigInteger solution;
 	public AcGame(String POne,String PTwo, JFrame main) {
-		this.scoreOne = 0;
-		this.scoreTwo = 0;
+		this.scoreOne = BigInteger.ZERO;
+		this.scoreTwo = BigInteger.ZERO;
 		this.pOne = POne;
 		this.pTwo = PTwo;
 		this.main_window = main;
@@ -83,8 +84,15 @@ public class AcGame {
 		Playerone.setText("<Player One take a Guess!>");
 		JLabel nameOne = new JLabel();
 		JLabel scoreO = new JLabel();
+		int temp = pOne.length();
+		if(pOne.length()<26) {
+			for(int k = 0; k<36-temp;k++) {
+				this.pOne = pOne+" ";
+			}
+		}
 		nameOne.setText(pOne);
-		scoreO.setText("Score: "+Integer.toString(scoreOne));
+		scoreO.setText("Score: "+scoreOne.toString());
+		
 		boxOne.add(nameOne);
 		boxOne.add( Playerone );
 		boxOne.add(scoreO);
@@ -100,7 +108,7 @@ public class AcGame {
 		Playertwo.setText("<Player Two take a Guess!>");
 		JLabel nameTwo = new JLabel();
 		JLabel scoreT = new JLabel();
-		scoreT.setText("Score: "+Integer.toString(scoreTwo));
+		scoreT.setText("Score: "+scoreTwo.toString());
 		nameTwo.setText(pTwo);
 		boxTwo.add(nameTwo);
 		boxTwo.add(Playertwo);
@@ -133,6 +141,13 @@ public class AcGame {
 			try {
 				this.firstGuess = BigInteger.valueOf(Long.parseLong(Playerone.getText()));
 				this.secondGuess = BigInteger.valueOf(Long.parseLong(Playertwo.getText()));
+				this.scoreOne = this.solution.subtract(firstGuess).abs();
+				this.scoreTwo = this.solution.subtract(secondGuess).abs();
+				scoreO.setText("Score: "+scoreOne.toString());
+				scoreT.setText("Score: "+scoreTwo.toString());
+				boxOne.setVisible(true);
+				boxTwo.setVisible(true);
+				main_window.setVisible(true);
 			}
 			catch(NumberFormatException e) {
 				JFrame inv = new JFrame();
@@ -146,7 +161,7 @@ public class AcGame {
 		main_window.getContentPane().add(panel, BorderLayout.SOUTH);
 		picturebutton.addActionListener((event) -> {
 			 try {
-				 displayPicture(main_window);
+				 this.displayPicture(main_window);
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -156,7 +171,7 @@ public class AcGame {
 		main_window.setVisible(true);
 	    return main_window;
 	}
-	public static void displayPicture(JFrame frame) throws MalformedURLException, IOException {
+	public void displayPicture(JFrame frame) throws MalformedURLException, IOException {
 		JLabel Quest = new JLabel("How many Green M&Ms are there ?", SwingConstants.CENTER);
 		Quest.setFont(new Font("Serif", Font.PLAIN, 34));
 		frame.add(Quest, BorderLayout.NORTH);
@@ -169,5 +184,6 @@ public class AcGame {
      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
      frame.add(scrollPane, BorderLayout.CENTER);
      frame.setVisible(true);
+     this.solution = BigInteger.valueOf(13);
 		  }
 }
