@@ -1,6 +1,7 @@
 package Cgames;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -35,13 +37,15 @@ public class AcGame {
 	private BigInteger scoreTwo;
 	private JFrame main_window;
 	private JFrame frame;
-	private BigInteger solution;
+	private BigInteger solution = BigInteger.ZERO;
+	private JScrollPane pic = null;
+	private JLabel picLabel;
 	public AcGame(String POne,String PTwo, JFrame main) {
 		this.scoreOne = BigInteger.ZERO;
 		this.scoreTwo = BigInteger.ZERO;
 		this.pOne = POne;
 		this.pTwo = PTwo;
-		this.main_window = main;
+		this.setMain_window(main);
 	}
 	
 	public static void starter(String one, String two, JFrame main) {
@@ -90,12 +94,118 @@ public class AcGame {
 				this.pOne = pOne+" ";
 			}
 		}
+		temp = pTwo.length();
+		if(pTwo.length()<26) {
+			for(int k = 0; k<36-temp;k++) {
+				this.pTwo = pTwo+" ";
+			}
+		}
 		nameOne.setText(pOne);
 		scoreO.setText("Score: "+scoreOne.toString());
+		JButton confirmGuessOne = new JButton();
+		JLabel scoreT = new JLabel();
+		confirmGuessOne.addActionListener((event) -> {
+			if(Playerone.getText().equals("")) {
+				JFrame inv = new JFrame();
+				JLabel err = new JLabel("Your input is empty :(");
+				inv.add(err);
+				inv.pack();
+				inv.setLocationRelativeTo(null);
+				inv.setVisible(true);
+			}
+			try {
+				this.firstGuess = BigInteger.valueOf(Long.parseLong(Playerone.getText()));
+				this.scoreOne = this.solution.subtract(firstGuess).abs();
+				String tempor = scoreOne.toString();
+				scoreO.setText("Score: "+tempor);
+
+				boxOne.setVisible(true);
+				boxTwo.setVisible(true);
+				main_window.setVisible(true);
+			}
+			catch(NumberFormatException e) {
+				JFrame inv = new JFrame();
+				JLabel err = new JLabel("One of the players input an invalid character :(");
+				inv.add(err);
+				inv.pack();
+				inv.setLocationRelativeTo(null);
+				inv.setVisible(true);
+			}
+			if(this.solution.equals(BigInteger.ZERO)) {
+				JFrame x = new JFrame();
+				JLabel warn = new JLabel("Picture was not displayed yet!");
+				x.add(warn);
+				x.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				x.setVisible(true);
+			}
+			else if(!(this.pic == null)) {
+				this.pic.setVisible(false);
+				this.pic = null;
+			}	
+			else {
+				JFrame x = new JFrame();
+				x.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				x.setLayout(new BorderLayout());
+				JLabel theme = new JLabel("Results", SwingConstants.CENTER);
+				theme.setFont(new Font("Serif", Font.PLAIN, 44));
+				JPanel West = new JPanel();
+				West.setLayout(new BoxLayout(West, BoxLayout.Y_AXIS));
+				JLabel playerOneResult = new JLabel("Player One", SwingConstants.CENTER);
+				playerOneResult.setFont(new Font("Serif", Font.PLAIN, 34));
+				JLabel playerOneResultn = new JLabel("+ "+this.scoreOne, SwingConstants.CENTER);
+				playerOneResultn.setFont(new Font("Serif", Font.PLAIN, 34));
+				scoreO.setFont(new Font("Serif", Font.PLAIN, 34));
+				x.add(West, BorderLayout.WEST);
+				JPanel East = new JPanel();
+				East.setLayout(new BoxLayout(East, BoxLayout.Y_AXIS));
+				JLabel playerTwoResult = new JLabel("Player Two", SwingConstants.CENTER);
+				playerTwoResult.setFont(new Font("Serif", Font.PLAIN, 34));
+				JLabel playerTwoResultn = new JLabel("+ "+this.scoreTwo, SwingConstants.CENTER);
+				playerTwoResultn.setFont(new Font("Serif", Font.PLAIN, 34));
+				scoreT.setFont(new Font("Serif", Font.PLAIN, 34));
+				x.add(East, BorderLayout.EAST);
+				playerTwoResult.setOpaque(true);
+				playerTwoResultn.setOpaque(true);
+				scoreO.setOpaque(true);
+				playerOneResult.setOpaque(true);
+				playerOneResultn.setOpaque(true);
+				scoreT.setOpaque(true);
+				if(scoreTwo.compareTo(scoreOne) == 1) {
+					East.setBackground(Color.GREEN);
+					West.setBackground(Color.RED);
+					playerTwoResult.setBackground(Color.GREEN);
+					playerTwoResultn.setBackground(Color.GREEN);
+					scoreT.setBackground(Color.GREEN);
+					playerOneResult.setBackground(Color.RED);
+					playerOneResultn.setBackground(Color.RED);
+					scoreO.setBackground(Color.RED);
+				}
+				else {
+					East.setBackground(Color.RED);
+					West.setBackground(Color.GREEN);
+					playerOneResult.setBackground(Color.GREEN);
+					playerOneResultn.setBackground(Color.GREEN);
+					scoreO.setBackground(Color.GREEN);
+					playerTwoResult.setBackground(Color.RED);
+					playerTwoResultn.setBackground(Color.RED);
+					scoreT.setBackground(Color.RED);
+				}
+				x.setTitle("Result");
+				x.setLocationRelativeTo(null);
+				x.setSize(400, 200);
+				x.setVisible(true);
+				}
+			boxOne.setVisible(true);
+			boxTwo.setVisible(true);
+			main_window.setVisible(true);
+			
+		});
 		
+	   confirmGuessOne.setText("Confirm your Guess");
 		boxOne.add(nameOne);
 		boxOne.add( Playerone );
 		boxOne.add(scoreO);
+		boxOne.add(confirmGuessOne);
 		main_window.add(boxOne, BorderLayout.WEST);
 		JTextField Playertwo = new JTextField();
 		Playertwo.addFocusListener(new FocusAdapter() {
@@ -107,12 +217,115 @@ public class AcGame {
 		});
 		Playertwo.setText("<Player Two take a Guess!>");
 		JLabel nameTwo = new JLabel();
-		JLabel scoreT = new JLabel();
+		JButton confirmGuessTwo = new JButton();
+		confirmGuessTwo.addActionListener((event) -> {
+			if(Playertwo.getText().equals("")) {
+				JFrame inv = new JFrame();
+				JLabel err = new JLabel("Your input is empty :(");
+				inv.add(err);
+				inv.pack();
+				inv.setLocationRelativeTo(null);
+				inv.setVisible(true);
+			}
+			try {
+				this.secondGuess = BigInteger.valueOf(Long.parseLong(Playertwo.getText()));
+				this.scoreTwo = this.solution.subtract(secondGuess).abs();
+				String tempor = scoreTwo.toString();
+				scoreT.setText("Score: "+tempor);
+			}
+			catch(NumberFormatException e) {
+				JFrame inv = new JFrame();
+				JLabel err = new JLabel("One of the players input an invalid character :(");
+				inv.add(err);
+				inv.pack();
+				inv.setLocationRelativeTo(null);
+				inv.setVisible(true);
+			}
+			if(this.solution.equals(BigInteger.ZERO)) {
+				JFrame x = new JFrame();
+				JLabel warn = new JLabel("Picture was not displayed yet!");
+				x.add(warn);
+				x.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				x.setVisible(true);
+			}
+			else if(!(this.pic == null)) {
+				this.pic.setVisible(false);
+				this.pic = null;
+			}	
+			else {
+				JFrame x = new JFrame();
+				x.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				x.setLayout(new BorderLayout());
+				JLabel theme = new JLabel("Results", SwingConstants.CENTER);
+				theme.setFont(new Font("Serif", Font.PLAIN, 44));
+				JPanel West = new JPanel();
+				West.setLayout(new BoxLayout(West, BoxLayout.Y_AXIS));
+				JLabel playerOneResult = new JLabel("Player One", SwingConstants.CENTER);
+				playerOneResult.setFont(new Font("Serif", Font.PLAIN, 34));
+				West.add(playerOneResult);
+				JLabel playerOneResultn = new JLabel("+ "+this.scoreOne, SwingConstants.CENTER);
+				playerOneResultn.setFont(new Font("Serif", Font.PLAIN, 34));
+				West.add(playerOneResultn);
+				scoreO.setFont(new Font("Serif", Font.PLAIN, 34));
+				West.add(scoreO);
+				x.add(West, BorderLayout.WEST);
+				JPanel East = new JPanel();
+				East.setLayout(new BoxLayout(East, BoxLayout.Y_AXIS));
+				JLabel playerTwoResult = new JLabel("Player Two", SwingConstants.CENTER);
+				playerTwoResult.setFont(new Font("Serif", Font.PLAIN, 34));
+				East.add(playerTwoResult);
+				JLabel playerTwoResultn = new JLabel("+ "+this.scoreTwo, SwingConstants.CENTER);
+				playerTwoResultn.setFont(new Font("Serif", Font.PLAIN, 34));
+				East.add(playerTwoResultn);
+				scoreT.setFont(new Font("Serif", Font.PLAIN, 34));
+				East.add(scoreT);
+				x.add(East, BorderLayout.EAST);
+				playerTwoResult.setOpaque(true);
+				playerTwoResultn.setOpaque(true);
+				scoreO.setOpaque(true);
+				playerOneResult.setOpaque(true);
+				playerOneResultn.setOpaque(true);
+				scoreT.setOpaque(true);
+				if(scoreTwo.compareTo(scoreOne) == 1) {
+					East.setBackground(Color.GREEN);
+					West.setBackground(Color.RED);
+					playerTwoResult.setBackground(Color.GREEN);
+					playerTwoResultn.setBackground(Color.GREEN);
+					scoreT.setBackground(Color.GREEN);
+					playerOneResult.setBackground(Color.RED);
+					playerOneResultn.setBackground(Color.RED);
+					scoreO.setBackground(Color.RED);
+				}
+				else {
+					East.setBackground(Color.RED);
+					West.setBackground(Color.GREEN);
+					playerOneResult.setBackground(Color.GREEN);
+					playerOneResultn.setBackground(Color.GREEN);
+					scoreO.setBackground(Color.GREEN);
+					playerTwoResult.setBackground(Color.RED);
+					playerTwoResultn.setBackground(Color.RED);
+					scoreT.setBackground(Color.RED);
+				}
+				x.setTitle("Result");
+				x.setLocationRelativeTo(null);
+				x.setSize(400, 200);
+				x.setVisible(true);
+				}
+
+			boxOne.setVisible(true);
+			boxTwo.setVisible(true);
+			main_window.setVisible(true);
+			
+			
+		});
+		confirmGuessTwo.setText("Confirm your Guess");
+//		confirmGuessTwo.setPreferredSize(new Dimension(50, 25));
 		scoreT.setText("Score: "+scoreTwo.toString());
 		nameTwo.setText(pTwo);
 		boxTwo.add(nameTwo);
 		boxTwo.add(Playertwo);
 		boxTwo.add(scoreT);
+		boxTwo.add(confirmGuessTwo);
 		main_window.add(boxTwo, BorderLayout.EAST);
 		main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		JButton picturebutton = new JButton();
@@ -162,6 +375,8 @@ public class AcGame {
 		picturebutton.addActionListener((event) -> {
 			 try {
 				 this.displayPicture(main_window);
+				 main_window.setVisible(true);
+                 ImageScheduler sced = new ImageScheduler(this);
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -170,6 +385,9 @@ public class AcGame {
 			}); 
 		main_window.setVisible(true);
 	    return main_window;
+	}
+	public static void x (JScrollPane pane) {
+		pane.setVisible(false);
 	}
 	public void displayPicture(JFrame frame) throws MalformedURLException, IOException {
 		JLabel Quest = new JLabel("How many Green M&Ms are there ?", SwingConstants.CENTER);
@@ -183,7 +401,24 @@ public class AcGame {
      scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
      frame.add(scrollPane, BorderLayout.CENTER);
-     frame.setVisible(true);
      this.solution = BigInteger.valueOf(13);
+     frame.setVisible(true);
+     this.pic = scrollPane;
 		  }
+
+	public JLabel getPicLabel() {
+		return picLabel;
+	}
+
+	public void setPicLabel(JLabel picLabel) {
+		this.picLabel = picLabel;
+	}
+
+	public JFrame getMain_window() {
+		return main_window;
+	}
+
+	public void setMain_window(JFrame main_window) {
+		this.main_window = main_window;
+	}
 }
