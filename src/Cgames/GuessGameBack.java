@@ -75,8 +75,46 @@ public static void startPage() {
 	singPlayer.setText("Single Player Guesses");
 	singPlayer.setBackground(Color.BLUE);
 	singPlayer.addActionListener((event) -> {
-		SingPlayer sin = new SingPlayer();
-		sin.starter();
+		JFrame fr = new JFrame();
+		fr.setTitle("Choosing a Gamemode");
+		JPanel carrier = new JPanel();
+//		carrier.setLayout(new BoxLayout(carrier, BoxLayout.Y_AXIS));
+		JButton ez = new JButton("Easy");
+		ez.setPreferredSize(new Dimension(500, 100));
+		ez.addActionListener((eventtwo)->{
+			SingPlayer e = new SingPlayer(0.25);
+			e.starter();
+			fr.setVisible(false);
+		});
+		JButton mid = new JButton("Middle");
+		mid.setPreferredSize(new Dimension(500, 100));
+		mid.addActionListener((eventtwo)->{
+			SingPlayer m = new SingPlayer(0.2);
+			m.starter();
+			fr.setVisible(false);
+		});
+		JButton hard = new JButton("Hard");
+		hard.setPreferredSize(new Dimension(500, 100));
+		hard.addActionListener((eventtwo)->{
+			SingPlayer h = new SingPlayer(0.15);
+			h.starter();
+			fr.setVisible(false);
+		});
+		JButton ex = new JButton("Extreme");
+		ex.setPreferredSize(new Dimension(500, 100));
+		ex.addActionListener((eventtwo)->{
+			SingPlayer ext = new SingPlayer(0.1);
+			ext.starter();
+			fr.setVisible(false);
+		});
+		fr.setSize(500, 450);
+		carrier.add(ez);
+		carrier.add(mid);
+		carrier.add(hard);
+		carrier.add(ex);
+		fr.add(carrier);
+		fr.setLocationRelativeTo(null);
+		fr.setVisible(true);
 		main_window.setVisible(false);
 	});
 	
