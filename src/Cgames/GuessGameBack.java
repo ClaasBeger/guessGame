@@ -76,6 +76,7 @@ public static void startPage() {
 	singPlayer.setBackground(Color.BLUE);
 	singPlayer.addActionListener((event) -> {
 		SingPlayer sin = new SingPlayer();
+		sin.starter();
 		main_window.setVisible(false);
 	});
 	
