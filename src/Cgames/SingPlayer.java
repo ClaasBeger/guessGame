@@ -31,8 +31,10 @@ public class SingPlayer {
 	private ArrayList<String> quests;
 	private ArrayList<BigInteger> sol;
 	private int pointer;
+	private double tolerance;
 	private BigInteger currentGuess;
-	public SingPlayer() {
+	public SingPlayer(double d) {
+		this.tolerance = d;
 		this.pics = new ArrayList<String>();
 		this.hints = new ArrayList<String>();
 		this.quests = new ArrayList<String>();
