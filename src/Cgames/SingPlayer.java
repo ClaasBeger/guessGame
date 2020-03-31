@@ -1,12 +1,14 @@
 package Cgames;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -109,9 +111,23 @@ public class SingPlayer {
     		JFrame frame = new JFrame();
     		frame.setTitle("Result");
     		JLabel solu = new JLabel();
-    		solu.setText("Solution: "+this.sol.get(this.pointer));
+    		String result = "Oops that was too far off:/";
+    		solu.setOpaque(true);
+    		solu.setBackground(Color.RED);
+    		if((new BigDecimal(this.sol.get(this.pointer)).subtract(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(BigDecimal.valueOf(Long.valueOf(guess.getText()))))==-1 && (new BigDecimal(this.sol.get(this.pointer)).add(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(BigDecimal.valueOf(Long.valueOf(guess.getText()))))==1){
+    			result = "You got it! +1";
+    			solu.setBackground(Color.GREEN);
+    		}
+    		solu.setText("Your result: "+result);
     		solu.setFont(new Font("Serif", Font.PLAIN, 44));
     		frame.add(solu);
+    		if(this.sol.get(this.pointer).equals(BigInteger.valueOf(Long.valueOf(guess.getText())))) {
+            	JLabel txt = new JLabel("Bonus: Right on the spot ! +1", SwingConstants.CENTER);
+            	txt.setFont(new Font("Serif", Font.PLAIN, 44));
+            	txt.setOpaque(true);
+            	txt.setBackground(Color.GREEN);
+            	frame.add(txt, BorderLayout.SOUTH);
+            }
     		frame.setLocationRelativeTo(null);
     		frame.pack();
     		frame.setVisible(true);
