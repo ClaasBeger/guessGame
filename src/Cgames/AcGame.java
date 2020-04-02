@@ -11,10 +11,15 @@ import java.awt.GridLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -40,11 +45,44 @@ public class AcGame {
 	private BigInteger solution = BigInteger.ZERO;
 	private JScrollPane pic = null;
 	private JLabel picLabel;
+	private ArrayList<String> pics;
+	private ArrayList<String> hints;
+	private ArrayList<String> quests;
+	private ArrayList<BigInteger> sol;
+	private int pointer;
 	public AcGame(String POne,String PTwo, JFrame main) {
 		this.scoreOne = BigInteger.ZERO;
 		this.scoreTwo = BigInteger.ZERO;
 		this.pOne = POne;
 		this.pTwo = PTwo;
+		this.pics = new ArrayList<String>();
+		this.hints = new ArrayList<String>();
+		this.quests = new ArrayList<String>();
+		this.sol = new ArrayList<BigInteger>();
+		this.pointer = 0;
+		URL url = getClass().getResource("Data.txt");
+		File file = new File(url.getPath());
+	    try {
+			List<String> lines = Files.readAllLines(Path.of(file.getPath()));
+			lines.stream().forEach(k->{
+				if(lines.indexOf(k)%4==0) {
+					pics.add(k);
+				}
+				else if(lines.indexOf(k)%4==1){
+					quests.add(k);
+				}
+				else if(lines.indexOf(k)%4==2){
+					hints.add(k);
+				}
+				else {
+					sol.add(new BigInteger(k));
+					
+				}
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.setMain_window(main);
 	}
 	
@@ -120,7 +158,7 @@ public class AcGame {
 			        }
 			}
 			try {
-				this.firstGuess = BigInteger.valueOf(Long.parseLong(Playerone.getText()));
+				this.firstGuess = new BigInteger(Playerone.getText());
 				this.scoreOne = this.solution.subtract(firstGuess).abs();
 			}
 			catch(NumberFormatException e) {
@@ -263,7 +301,7 @@ public class AcGame {
 			        }
 			}
 			try {
-				this.secondGuess = BigInteger.valueOf(Long.parseLong(Playertwo.getText()));
+				this.secondGuess = new BigInteger(Playertwo.getText());
 				this.scoreTwo = this.solution.subtract(secondGuess).abs();
 				
 			}
@@ -444,20 +482,19 @@ public class AcGame {
 	}
 
 	public void displayPicture(JFrame frame) throws MalformedURLException, IOException {
-		JLabel Quest = new JLabel("How many Green M&Ms are there ?", SwingConstants.CENTER);
+		JLabel Quest = new JLabel(this.quests.get(this.pointer), SwingConstants.CENTER);
 		Quest.setFont(new Font("Serif", Font.PLAIN, 34));
 		frame.add(Quest, BorderLayout.NORTH);
 		BufferedImage img = ImageIO.read(new URL(
-				"https://i7.pngguru.com/preview/310/650/573/5bbc43fbae155.jpg"));
+				this.pics.get(this.pointer)));
+//				"https://i7.pngguru.com/preview/310/650/573/5bbc43fbae155.jpg"));
 	 ImageIcon icon = new ImageIcon(img);
      JLabel label = new JLabel(icon);
      JScrollPane scrollPane = new JScrollPane(label);
      scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
      frame.add(scrollPane, BorderLayout.CENTER);
-     this.solution = BigInteger.valueOf(13);
      frame.setVisible(true);
-     this.pic = scrollPane;
 		  }
 
 	public JLabel getPicLabel() {
