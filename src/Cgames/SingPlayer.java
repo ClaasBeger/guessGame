@@ -34,6 +34,7 @@ public class SingPlayer {
 	private ArrayList<BigInteger> sol;
 	private int pointer;
 	private double tolerance;
+	private JLabel quest;
 	private BigInteger currentGuess;
 	public SingPlayer(double d) {
 		this.tolerance = d;
@@ -57,7 +58,7 @@ public class SingPlayer {
 					hints.add(k);
 				}
 				else {
-					sol.add(BigInteger.valueOf(Long.valueOf(k)));
+					sol.add(new BigInteger(k));
 				}
 			});
 		} catch (IOException e) {
@@ -107,27 +108,29 @@ public class SingPlayer {
     	JButton confirm = new JButton();
     	confirm.setText("Confirm your Guess");
     	confirm.addActionListener((event)->{
-    		this.currentGuess = BigInteger.valueOf(Long.valueOf(guess.getText()));
+    		this.currentGuess = new BigInteger(guess.getText());
     		JFrame frame = new JFrame();
     		frame.setTitle("Result");
     		JLabel solu = new JLabel();
     		String result = "Oops that was too far off:/";
     		solu.setOpaque(true);
     		solu.setBackground(Color.RED);
-    		if((new BigDecimal(this.sol.get(this.pointer)).subtract(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(BigDecimal.valueOf(Long.valueOf(guess.getText()))))==-1 && (new BigDecimal(this.sol.get(this.pointer)).add(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(BigDecimal.valueOf(Long.valueOf(guess.getText()))))==1){
+//    		System.out.println("Guess: "+ new BigDecimal(guess.getText())+" Solution"+ new BigDecimal(this.sol.get(this.pointer)));
+    		if((new BigDecimal(this.sol.get(this.pointer)).subtract(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(new BigDecimal(guess.getText())))==-1 && (new BigDecimal(this.sol.get(this.pointer)).add(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(new BigDecimal(guess.getText())))==1){
     			result = "You got it! +1";
     			solu.setBackground(Color.GREEN);
     		}
     		solu.setText("Your result: "+result);
     		solu.setFont(new Font("Serif", Font.PLAIN, 44));
     		frame.add(solu);
-    		if(this.sol.get(this.pointer).equals(BigInteger.valueOf(Long.valueOf(guess.getText())))) {
+    		if(this.sol.get(this.pointer).equals(new BigInteger(guess.getText()))) {
             	JLabel txt = new JLabel("Bonus: Right on the spot ! +1", SwingConstants.CENTER);
             	txt.setFont(new Font("Serif", Font.PLAIN, 44));
             	txt.setOpaque(true);
             	txt.setBackground(Color.GREEN);
             	frame.add(txt, BorderLayout.SOUTH);
             }
+    		this.pointer++;
     		frame.setLocationRelativeTo(null);
     		frame.pack();
     		frame.setVisible(true);
@@ -157,13 +160,15 @@ public class SingPlayer {
 		hint.setFont(new Font("Serif", Font.PLAIN, 30));
 		hinter.add(title, BorderLayout.NORTH);
 		hinter.add(hint, BorderLayout.CENTER);
-		hinter.setLocationRelativeTo(null);
 		hinter.pack();
+		hinter.setLocationRelativeTo(null);
 		hinter.setVisible(true);
 	}
 	public void displayPicture(JFrame frame) throws MalformedURLException, IOException {
 		JLabel Quest = new JLabel(this.quests.get(this.pointer), SwingConstants.CENTER);
+		Quest.setOpaque(true);
 		Quest.setFont(new Font("Serif", Font.PLAIN, 34));
+		this.quest = Quest;
 		frame.add(Quest, BorderLayout.NORTH);
 		BufferedImage img = ImageIO.read(new URL(
 				this.pics.get(this.pointer)));
