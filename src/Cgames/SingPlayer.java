@@ -36,6 +36,7 @@ public class SingPlayer {
 	private double tolerance;
 	private JLabel quest;
 	private BigInteger currentGuess;
+	private int score;
 	public SingPlayer(double d) {
 		this.tolerance = d;
 		this.pics = new ArrayList<String>();
@@ -43,6 +44,7 @@ public class SingPlayer {
 		this.quests = new ArrayList<String>();
 		this.sol = new ArrayList<BigInteger>();
 		this.pointer = 0;
+		this.score= 0;
 		URL url = getClass().getResource("Data.txt");
 		File file = new File(url.getPath());
 	    try {
@@ -118,6 +120,7 @@ public class SingPlayer {
 //    		System.out.println("Guess: "+ new BigDecimal(guess.getText())+" Solution"+ new BigDecimal(this.sol.get(this.pointer)));
     		if((new BigDecimal(this.sol.get(this.pointer)).subtract(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(new BigDecimal(guess.getText())))==-1 && (new BigDecimal(this.sol.get(this.pointer)).add(new BigDecimal(this.sol.get(this.pointer)).multiply(new BigDecimal(this.tolerance))).compareTo(new BigDecimal(guess.getText())))==1){
     			result = "You got it! +1";
+    			this.score++;
     			solu.setBackground(Color.GREEN);
     		}
     		solu.setText("Your result: "+result);
@@ -125,11 +128,17 @@ public class SingPlayer {
     		frame.add(solu);
     		if(this.sol.get(this.pointer).equals(new BigInteger(guess.getText()))) {
             	JLabel txt = new JLabel("Bonus: Right on the spot ! +1", SwingConstants.CENTER);
+            	this.score++;
             	txt.setFont(new Font("Serif", Font.PLAIN, 44));
             	txt.setOpaque(true);
             	txt.setBackground(Color.GREEN);
             	frame.add(txt, BorderLayout.SOUTH);
             }
+    		//ss
+    		if(result.equals("Oops that was too far off:/")) {
+    			frame.setVisible(false);
+    			EndGame end = new EndGame(this.score);
+    		}
     		this.pointer++;
     		frame.setLocationRelativeTo(null);
     		frame.pack();
