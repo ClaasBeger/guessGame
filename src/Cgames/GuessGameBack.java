@@ -155,7 +155,8 @@ public static void startPage() {
 	Statistic.setBackground(Color.ORANGE);
 	main_window.add(Statistic, BorderLayout.EAST);
 	Statistic.addActionListener((event) -> {
-		Stats.plot(new JFrame());
+		Stats x = new Stats();
+		  x.plot();
 		main_window.setVisible(false);
 		}); 
 	main_window.setExtendedState(JFrame.MAXIMIZED_BOTH); 

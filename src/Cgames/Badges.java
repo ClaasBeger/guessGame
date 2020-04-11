@@ -42,7 +42,7 @@ public class Badges extends Stats{
 		frame.setVisible(true);
     }
 	public Badges(Path path) {
-		super(path);
+
 		// TODO Auto-generated constructor stub
 	}
 	public static void displayPicture(JFrame frame) throws MalformedURLException, IOException {
