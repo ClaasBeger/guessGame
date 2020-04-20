@@ -38,33 +38,11 @@ public class EndGame {
 	//singPlayer
     public EndGame(int endscore) {
     	this.score = endscore;
-    	URL url = getClass().getResource("History.txt");
-		File file = new File(url.getPath());
-    	List<String> linesw = Arrays.asList("The first line", "The second line");
-    	Path filen = Paths.get("the-file-name.txt");
-    	try {
-			Files.write(filen, linesw, StandardCharsets.UTF_8);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-    	//Files.write(file, lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-		List<String> lines;
-		try {
-			FileWriter fw = new FileWriter(file, true);
-		    BufferedWriter bw = new BufferedWriter(fw);
-		    PrintWriter out = new PrintWriter(bw);
-		    out.println(endscore);
-		    //more code
-			lines = Files.readAllLines(Path.of(file.getPath()));
-			System.out.println(lines.get(0));
-			Highscore = Integer.parseInt(lines.get(0));
-			lines.remove(0);
-			this.hist = lines.stream().map(k->Integer.parseInt(k)).collect(Collectors.toList());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        Savefile s = new Savefile(7);
+		s.write(String.valueOf(endscore));
+		List<String> lines = s.read();
+		Highscore = Integer.parseInt(lines.stream().max((k, v)->Integer.compare(Integer.parseInt(k), Integer.parseInt(v))).get());
+		this.hist = lines.stream().map(k->Integer.parseInt(k)).collect(Collectors.toList());
 		
         this.starter();   
 	    }
@@ -88,13 +66,11 @@ public class EndGame {
     	score.setFont(new Font("Serif", Font.PLAIN, 34));
     	JLabel hscore = new JLabel("Your Highscore: "+this.Highscore, SwingConstants.CENTER);
     	hscore.setFont(new Font("Serif", Font.PLAIN, 34));
-    	
-    	this.hist.remove(0);
     	this.hist.sort((x,y)->Integer.compare(x, y));
     	percentileborders.add(0);
     	for(int k = 0; k<percentiles.size();k++) {
     	percentileborders.add(this.hist.get((int) Math.ceil(percentiles.get(k) * this.hist.size()) - 1));}
-    	percentileborders.forEach(System.out::println);
+//    	percentileborders.forEach(System.out::println);
     	int leftIndex = Math.abs((Math.abs(Collections.binarySearch(percentileborders, this.score))-2));// - 2
     	int rightIndex = Math.abs((Math.abs(Collections.binarySearch(percentileborders, this.score))- 1));// 
     	System.out.println(leftIndex+", "+rightIndex);

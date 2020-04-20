@@ -55,28 +55,11 @@ public class Stats {
 	    frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 	    frame.setBackground(Color.GRAY);
   	    final XYSeries series = new XYSeries("Guess Game History");
-  	    URL url = getClass().getResource("History.txt");
-		File file = new File(url.getPath());
-		List<String> scores = null;
-		try {
-            scores = Files.readAllLines(Path.of(file.getPath()));
-            List<String> scorecarrier = scores;
-			scorecarrier.forEach(k->series.add(scorecarrier.indexOf(k)+1, Integer.parseInt(k)));
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+  	    Savefile s = new Savefile(7);
+		List<String> scores = s.read();
+		List<String> scorecarrier = scores;
+		scorecarrier.forEach(k->series.add(scorecarrier.indexOf(k)+1, Integer.parseInt(k)));
 		int high = Integer.parseInt(scores.stream().max((x,y)->Integer.compare(Integer.parseInt(x), Integer.parseInt(y))).get());
-//  	    series.add(1.0, 7);
-//  	    series.add(2.0, 2);
-//  	    series.add(3.0, 4);
-//  	    series.add(4.0, 4);
-//  	    series.add(5.0, 1);
-//  	    series.add(6.0, 0);
-//  	    series.add(7.0, 10);
-//  	    series.add(8.0, 11);
-//  	    series.add(9.0, 7);
   	    final XYSeriesCollection data = new XYSeriesCollection(series);
   	    final JFreeChart chart = ChartFactory.createXYLineChart(
   	        "HighScore: "+high,
