@@ -8,11 +8,19 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -22,12 +30,50 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 public class Badges extends Stats{
-    public static void starter() {
+	public Badges() {
+		
+	}
+    public void starter() {
+    	URL url = getClass().getResource("History.txt");
+    	String mainPath = null;
+    	boolean played = false;
+    	try {
+			URI uri = url.toURI();
+			mainPath = Paths.get(uri).toString();
+            mainPath = mainPath.replace("\\bin\\", "\\src\\");
+            List<String> x = Files.readAllLines(Path.of(mainPath));
+            if(!(x.isEmpty() || x.get(0).equals(""))) {
+            	played = true;
+            }
+            
+		} catch (URISyntaxException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
     	JFrame frame = new JFrame();
+    	int c = 25;
 		frame.setLayout(new GridLayout(5,5));
-		for(int k = 0; k<25;k++) { 
+		if(played) {
+    		try {
+				displayPicture(frame, ImageIO.read(new URL("https://i1.sndcdn.com/avatars-000578186550-y571sy-t500x500.jpg")));
+			    c-- ;
+    		} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+		for(int k = 0; k<c;k++) { 
 			try {
-				displayPicture(frame);
+				displayPicture(frame,  ImageIO.read(new URL(
+						"https://upload.wikimedia.org/wikipedia/commons/0/06/Question-mark.jpg")));
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -45,10 +91,7 @@ public class Badges extends Stats{
 
 		// TODO Auto-generated constructor stub
 	}
-	public static void displayPicture(JFrame frame) throws MalformedURLException, IOException {
-		BufferedImage img = ImageIO.read(new URL(
-//				"https://i7.pngguru.com/preview/310/650/573/5bbc43fbae155.jpg"));
-				"https://upload.wikimedia.org/wikipedia/commons/0/06/Question-mark.jpg"));
+	public static void displayPicture(JFrame frame, BufferedImage img) throws MalformedURLException, IOException {
 	 ImageIcon icon = new ImageIcon(img);
 	 Image cImage = icon.getImage();
      icon = new ImageIcon(createResizedCopy(cImage, 250, 130, true));

@@ -146,7 +146,8 @@ public static void startPage() {
 	badges.setBackground(Color.YELLOW);
 	badges.setText("Badges");
 	badges.addActionListener((event)-> {
-		Badges.starter();
+		Badges b = new Badges();
+		b.starter();
 		main_window.setVisible(false);
 	});
 	main_window.add(badges, BorderLayout.WEST);
