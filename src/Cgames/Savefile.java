@@ -29,16 +29,13 @@ public class Savefile {
 			URI uri = url.toURI();
 			mainPath = Paths.get(uri).toString();
             mainPath = mainPath.replace("\\bin\\", "\\src\\");
-			Path path = Paths.get(mainPath);
 		} catch (URISyntaxException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		File file = new File(url.getPath()); //url.getPath()
     	try(FileWriter fw= new FileWriter(mainPath, true);//file
     	    BufferedWriter bw = new BufferedWriter(fw);
     	    PrintWriter out = new PrintWriter(bw)) {
-    		List<String> current = this.read();
     		out.println(s);
     		out.flush();
     		out.close();
